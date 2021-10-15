@@ -6,7 +6,8 @@ var bodyparcer = require('body-parser');
 var mongoose = require('mongoose');
 var port =  process.env.PORT || 4201;
 
-var cliente_route = require('../backend/routes/cliente')
+var cliente_route = require('../backend/routes/cliente');
+var admin_route = require('../backend/routes/admin');
 
 mongoose.connect('mongodb://127.0.0.1:27017/CasoEstudio', (err, res) => {
     if(err){
@@ -20,7 +21,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/CasoEstudio', (err, res) => {
     }
 })
 
-app.use(bodyparcer.urlencoded);
+app.use(bodyparcer.urlencoded({extended:true}));
+app.use(bodyparcer.json({limit:'50 mb', extended:true}))
 
 app.use((req, res, next) =>{
     res.header('Access-Contol-Allow-Origin', '*');
@@ -31,6 +33,7 @@ app.use((req, res, next) =>{
 });
 
 
-app.use(cliente_route);
+app.use('/api' ,cliente_route);
+app.use('/api' ,admin_route);
 
 module.exports = app;
